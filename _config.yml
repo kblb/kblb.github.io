@@ -1,0 +1,17 @@
+title: kblb tech
+email: lukasz.p.biel@gmail.com
+description: >-
+  We write about tech related topics, varying from programming, game dev to 3d modelling
+baseurl: "" 
+url: "https://kblb.github.io"
+github_username: kblb
+
+theme: jekyll-swiss
+plugins:
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+paginate: 10
+paginate_path: "/page:num/"
