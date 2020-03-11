@@ -9,15 +9,19 @@ original_link: "https://luke-biel.github.io/technology/2020/03/09/a-typescript-c
 
 <p>I pick up new projects quite often. To balance the chaos I have numerous <a href="https://trello.com/">trello</a> boards. Each of them represents project or idea that I work on, or intend to work on. To organize them, I’ve created a tool that shows you (from across all of your boards) what tasks have you <strong>In Progress</strong> and some of those that you can pick up from <strong>To Do</strong>.</p>
 
+<h6 id="disclaimer">Disclaimer</h6>
+
+<p>This article is more of a technical walk-through than case study with specific code in mind. If you are interested in viewing <em>how</em> I structured the code, you may visit my <a href="https://luke-biel.github.io/trollo">repo</a>.</p>
+
 <h4 id="why-typescript">Why typescript?</h4>
 
-<p>Other languages I’ve considered were <em>bash</em>, <em>python</em> and <em>ruby</em>. Apart for my personal desire to learn <em>JS</em> and <em>nodejs</em>, <em>typescript</em> stood out by being type safe <strong>AND</strong> by providing non-nullability by default. I got used to explicit “null” types when I started writing my applications in <em>Rust</em>.<br />
-Additionally typescript was supplying me with whole <em>nodejs</em> ecosystem and libraries.</p>
+<p>Other languages I’ve considered were <em>bash</em>, <em>python</em> and <em>ruby</em>. Apart for my personal desire to learn <em>JS</em> and <em>nodejs</em>, <em>TypeScript</em> stood out by being type safe <strong>AND</strong> by providing non-nullability by design. I got used to explicit “null” types when I started writing my applications in <em>Rust</em>.<br />
+Additionally <em>TypeScript</em> was supplying me with whole <em>nodejs</em> ecosystem and libraries.</p>
 
 <h4 id="setting-up">Setting up</h4>
 
 <p><em>TypeScript</em> can be seamlessly integrated with <em>npm</em> environment.<br />
-First we create new npm package <code class="language-plaintext highlighter-rouge">npm init</code>. This should prompt us with new package creator:</p>
+First we create new npm package <code class="language-plaintext highlighter-rouge">npm init</code>. This should prompt us with package creator:</p>
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└─[0] &lt;&gt; npm init
 This utility will walk you through creating a package.json file.
 It only covers the most common items, and tries to guess sensible defaults.
@@ -39,7 +43,8 @@ keywords:
 author: Łukasz Biel &lt;lukasz.p.biel@gmail.com&gt;
 license: (ISC) MIT
 </code></pre></div></div>
-<p>Next thing we need to add typescript as a dependency - <code class="language-plaintext highlighter-rouge">npm install typescript @types/node --save-dev</code> - and alter <em>package.json</em> to include build command which will compile our code into javascript library. The <code class="language-plaintext highlighter-rouge">@types/node</code> module is necessary for <em>TypeScript</em> to know what function signature does node export.</p>
+<p>Next thing we need to add typescript as a dependency - <code class="language-plaintext highlighter-rouge">npm install typescript @types/node --save-dev</code>. The <code class="language-plaintext highlighter-rouge">@types/node</code> module is necessary for <em>TypeScript</em> to know what function signatures does node export.<br />
+We need to add couple of run scripts to <em>package.json</em>, ones that compile code to <em>js</em> and ones that run the app with <em>node</em>.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tsc -p ."</span><span class="p">,</span><span class="w">
     </span><span class="nl">"clean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rm -rf ./lib"</span><span class="p">,</span><span class="w">
@@ -50,16 +55,16 @@ license: (ISC) MIT
 <p>We add <code class="language-plaintext highlighter-rouge">tsconfig.json</code> so <em>TypeScript</em> compiler knows how to build our code:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es5"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es5"</span><span class="p">,</span><span class="w">                  </span><span class="err">//</span><span class="w"> </span><span class="err">target</span><span class="w"> </span><span class="err">es</span><span class="w"> </span><span class="err">backend</span><span class="w">
         </span><span class="nl">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commonjs"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"lib"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"es6"</span><span class="p">,</span><span class="w"> </span><span class="s2">"es2019"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dom"</span><span class="p">],</span><span class="w">
-        </span><span class="nl">"declaration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"outDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lib"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"rootDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"strict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">],</span><span class="w">
-        </span><span class="nl">"esModuleInterop"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"resolveJsonModule"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="nl">"lib"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"es6"</span><span class="p">,</span><span class="w"> </span><span class="s2">"es2019"</span><span class="p">],</span><span class="w">         </span><span class="err">//</span><span class="w"> </span><span class="err">libraries</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">include</span><span class="w">
+        </span><span class="nl">"declaration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">              </span><span class="err">//</span><span class="w"> </span><span class="err">should</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">generate</span><span class="w"> </span><span class="err">.d.ts</span><span class="w"> </span><span class="err">files</span><span class="w">
+        </span><span class="nl">"outDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lib"</span><span class="p">,</span><span class="w">                  </span><span class="err">//</span><span class="w"> </span><span class="err">where</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">want</span><span class="w"> </span><span class="err">.js</span><span class="w"> </span><span class="err">files</span><span class="w"> </span><span class="err">generated</span><span class="w">
+        </span><span class="nl">"rootDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w">                 </span><span class="err">//</span><span class="w"> </span><span class="err">where</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">place</span><span class="w"> </span><span class="err">out</span><span class="w"> </span><span class="err">.ts</span><span class="w"> </span><span class="err">code</span><span class="w">
+        </span><span class="nl">"strict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                   </span><span class="err">//</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">want</span><span class="w"> </span><span class="err">strict</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">checking</span><span class="w">
+        </span><span class="nl">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">],</span><span class="w">                </span><span class="err">//</span><span class="w"> </span><span class="err">what</span><span class="w"> </span><span class="err">name</span><span class="w"> </span><span class="err">definitions</span><span class="w"> </span><span class="err">should</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">include</span><span class="w">
+        </span><span class="nl">"esModuleInterop"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">compatibility</span><span class="w"> </span><span class="err">option</span><span class="w">
+        </span><span class="nl">"resolveJsonModule"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">         </span><span class="err">//</span><span class="w"> </span><span class="err">include</span><span class="w"> </span><span class="err">modules</span><span class="w"> </span><span class="err">imported</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">.json</span><span class="w"> </span><span class="err">extension</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -85,7 +90,7 @@ Hello, world!
 
 <p>In order to make any request to their service we need their API key and token, first one we get at <a href="https://trello.com/app-key">https://trello.com/app-key</a>, latter at <a href="https://trello.com/1/authorize?expiration=never&amp;scope=read,write,account&amp;response_type=token&amp;name=Server%20Token&amp;key=$TRELLO_KEY">https://trello.com/1/authorize?expiration=never&amp;scope=read,write,account&amp;response_type=token&amp;name=Server%20Token&amp;key=$TRELLO_KEY</a>, where we should replace <strong>$TRELLO_KEY</strong> with our app-key. Further reading is available at <a href="https://developers.trello.com/docs/api-introduction">https://developers.trello.com/docs/api-introduction</a>.</p>
 
-<p>In order to get list of user boards, we need to <strong>GET</strong> <code class="language-plaintext highlighter-rouge">/members/me/boards</code>. We can freely limit json fields to only contain <em>name</em> and <em>id</em> by adding <code class="language-plaintext highlighter-rouge">?fields=name,id</code>. We won’t use other fields now. An example of correct response is:</p>
+<p>In order to get list of user boards, we need to <strong>GET</strong> <code class="language-plaintext highlighter-rouge">/members/me/boards</code>. We may want to limit json fields to only contain <em>name</em> by adding <code class="language-plaintext highlighter-rouge">?fields=name</code>. <em>id</em> will be added anyway. We won’t use other fields for now. An example of response is:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bts"</span><span class="p">,</span><span class="w">
@@ -113,9 +118,9 @@ Hello, world!
     <span class="nl">id</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>this is huge benefit of <strong>TypeScript</strong> as we can have typed DTOs opposed to vague and uncertain data structures that some other languages would provide.</p>
+<p>this is huge benefit of <strong>TypeScript</strong>, we can have typed DTOs as opposed to vague and uncertain data structures that some other languages would provide.</p>
 
-<p>Having board <em>id</em> we can now query each of the boards to get names of lists (columns) available. We do that on endpoint <code class="language-plaintext highlighter-rouge">/boards/$ID/lists</code>. We can again limit ourselves only to download <em>name</em> and <em>id</em> fields. Here’s an excerpt from <em>dir-assert</em> board:</p>
+<p>Having board <em>id</em> we can now query each of the boards to get names of lists (columns) available. We do that on endpoint <code class="language-plaintext highlighter-rouge">/boards/$ID/lists</code>. We can again limit ourselves only to download <em>name</em> field. Here’s an excerpt from <em>dir-assert</em> board:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e1e481819a7f78868014c9e3"</span><span class="p">,</span><span class="w">
@@ -135,7 +140,7 @@ Hello, world!
 <p>We are only interested with boards that have lists named <strong>To Do</strong> and <strong>In Progress</strong>, so we can filter out other ones.</p>
 
 <p>We need cards from each <strong>To Do</strong> list and each <strong>In Progress</strong> list grouped in one place.
-This purpose we can fulfill with <code class="language-plaintext highlighter-rouge">/lists/$ID/cards</code> endpoint. Example response:</p>
+This purpose fulfils <code class="language-plaintext highlighter-rouge">/lists/$ID/cards</code> endpoint. Example response:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e440f40baa1f3516713b575"</span><span class="p">,</span><span class="w">
@@ -156,17 +161,24 @@ This purpose we can fulfill with <code class="language-plaintext highlighter-rou
 
 <h4 id="drawing-on-terminal">Drawing on terminal</h4>
 
-<p>I’ve tested some of the available <a href="https://en.wikipedia.org/wiki/Text-based_user_interface">tui</a>s but none was feeling right, therefore I’ve settled down with plain <em>chalk</em>. <em>Chalk</em> is a library that allows you to paint text in easy way, by using template strings.</p>
+<p>I’ve tested some of the available <a href="https://en.wikipedia.org/wiki/Text-based_user_interface">tui</a>s but none was feeling right, therefore I’ve settled down with plain <em>chalk</em>. <em>chalk</em> is a library that allows you to paint text in easy way, by using template strings.</p>
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">chalk</span><span class="s2">`{red ...there's nothing being worked on currently}`</span>
 </code></pre></div></div>
 
 <p>The final result looks like this:</p>
 
-<p><img src="https://luke-biel.github.io/trollo/usage.png" alt="Trollo" /></p>
+<p><img src="/images/2020-03-09-a-typescript-course/usage.png" alt="Trollo" /></p>
 
-<h4 id="summary">Summary</h4>
+<h4 id="conclusion">Conclusion</h4>
 
 <p><a href="https://luke-biel.github.io/trollo">repo</a></p>
 
-<p>Okay, it works. It even displays useful information, so that’s a success. But it’s a bit slow. I can use it once a while, but if I’d start each bash session with <a href="https://luke-biel.github.io/trollo">trollo</a> run, as I intended, I’d get annoyed quite quickly for how slow the app is. And the bottleneck is that I’m making <em>1</em> request for boards, <em>X</em> requests for each boards list, <em>2*X</em> requests for each list cards. So when X is 10, I’m making effectively 31 http requests. That’s a lot.<br />
-Well, it’s time to create board for trollo and put caching in <strong>To Do</strong>.</p>
+<p>I’m quite shocked how easy to use, yet so powerful typescript is. It’s language that I feel quite comfortable writing in, which I haven’t said about anything since the time I started programming in <em>rust</em> and <em>haskell</em>.</p>
+
+<h6 id="about-application">About application</h6>
+
+<p>It works. It even displays useful information, so that’s a success. However…</p>
+
+<p>    …it’s a bit slow. I can use it once a while, but if I’d start each bash session with <a href="https://luke-biel.github.io/trollo">trollo</a> run, as I intended, I’d get annoyed quite quickly for how slow the app is.<br />
+Bottleneck is in amount of requests I make. <em>1</em> request for boards, <em>X</em> requests for each boards list, <em>2*X</em> requests for each list cards. So when <em>X is 10</em>, I’m effectively making 31 http requests. That’s a lot.<br />
+Well, it’s time to create board for <a href="https://luke-biel.github.io/trollo">trollo</a> and put caching in <strong>To Do</strong> :)</p>
