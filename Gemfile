@@ -19,7 +19,7 @@ group :jekyll_plugins do
   gem "jekyll-paginate", "~> 1.1"
   gem "jekyll-seo-tag", "~> 2.6"
   gem "jekyll-sitemap", "~> 1.4"
-  gem "jekyll-sol", git: 'git@github.com:luke-biel/jekyll-sol.git'
+  gem "jekyll-sol", git: 'https://github.com/luke-biel/jekyll-sol.git'
 end
 
 # Performance-booster for watching directories on Windows

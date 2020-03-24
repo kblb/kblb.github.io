@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:luke-biel/jekyll-sol.git
+  remote: https://github.com/luke-biel/jekyll-sol.git
   revision: 8afe5a183e763186242f96ef8e21ef58c64669d1
   specs:
     jekyll-sol (0.1.0)
