@@ -13,10 +13,10 @@ jobs:
     - name: Prepare environment
       run: |
         sudo apt install libsqlite3-dev -y && \
-        sudo gem install pluto bundler && \
+        sudo gem install pluto bundler jekyll && \
         sudo sed 's|rexml/D|rexml/d|' -i /var/lib/gems/2.5.0/gems/opmlparser-1.0.0/lib/opmlparser.rb
     - uses: actions/checkout@v2
     - name: Fetch feeds
       run: pluto u planet.ini
     - name: Build the site
-      run:  bundle exec jekyll build --future
+      run: jekyll build --future
