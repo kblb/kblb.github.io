@@ -19,13 +19,7 @@ group :jekyll_plugins do
   gem "jekyll-paginate", "~> 1.1"
   gem "jekyll-seo-tag", "~> 2.6"
   gem "jekyll-sitemap", "~> 1.4"
-end
-
-# Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
-# and associated library.
-install_if -> { RUBY_PLATFORM =~ %r!mingw|mswin|java! } do
-  gem "tzinfo", "~> 2.0"
-  gem "tzinfo-data"
+  gem "jekyll-sol", git: 'git@github.com:luke-biel/jekyll-sol.git'
 end
 
 # Performance-booster for watching directories on Windows

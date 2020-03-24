@@ -58,30 +58,11 @@
       </header>
 
       <div class="container mx-auto px-2 py-4">
-        {% for post in paginator.posts %}
+        {% for post in site.data['feeds'] %}
           {% include post_block.html %}
         {% endfor %}
       </div>
 
-    </div>
-
-    <!-- Pagination links -->
-    <div class="pagination">
-        {% if paginator.previous_page %}
-        <a href="{{ paginator.previous_page_path }}" class="previous bold">
-            Previous
-        </a>
-        {% else %}
-        <span class="previous">Previous</span>
-        {% endif %}
-        <span class="page_number ">
-        {{ paginator.page }} of {{ paginator.total_pages }}
-        </span>
-        {% if paginator.next_page %}
-        <a href="{{ paginator.next_page_path }}" class="next bold">Next</a>
-        {% else %}
-        <span class="next ">Next</span>
-        {% endif %}
     </div>
 
     {% include footer.html %}
