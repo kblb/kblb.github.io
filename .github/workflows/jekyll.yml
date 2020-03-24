@@ -20,3 +20,9 @@ jobs:
       run: pluto u planet.ini
     - name: Build the site
       run: sudo bundle install && bundle exec jekyll build --future
+    - name: Publish generated content to GitHub Pages
+      uses: tsunematsu21/actions-publish-gh-pages@v1.0.0
+      with:
+        dir: _site
+        branch: gh-pages
+        token: ${{ secrets.ACCESS_TOKEN }}
