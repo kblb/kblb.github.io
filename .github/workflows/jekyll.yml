@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Prepare environment
+      run: ruby -v
     - uses: actions/checkout@v2
     - name: Build the site in the jekyll/builder container
       run: |
