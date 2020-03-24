@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: gem install pluto
+    - run: sudo gem install pluto
     - run: pluto u planet.ini
     - name: Build the site in the jekyll/builder container
       run: |
