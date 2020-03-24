@@ -19,4 +19,4 @@ jobs:
     - name: Fetch feeds
       run: pluto u planet.ini
     - name: Build the site
-      run: jekyll build --future
+      run: bundle exec jekyll build --future
