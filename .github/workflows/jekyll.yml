@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Prepare environment
       run: |
-        sudo apt install libsqlite-3 && \
+        sudo apt install libsqlite3-dev -y && \
         sudo gem install pluto bundler
     - uses: actions/checkout@v2
     - name: Fetch feeds
