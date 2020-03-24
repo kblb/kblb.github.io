@@ -11,10 +11,11 @@ jobs:
 
     steps:
     - name: Prepare environment
-      run: ruby -v
-    - uses: actions/checkout@v2
-    - name: Build the site in the jekyll/builder container
       run: |
-        docker run \
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+        sudo apt install libsqlite-3 && \
+        sudo gem install pluto bundler
+    - uses: actions/checkout@v2
+    - name: Fetch feeds
+      run: pluto u planet.ini
+    - name: Build the site
+      run:  bundle exec jekyll build --future
