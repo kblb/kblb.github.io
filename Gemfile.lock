@@ -47,7 +47,7 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     iniparser (1.0.1)
-    jekyll (4.0.0)
+    jekyll (4.0.1)
       addressable (~> 2.4)
       colorator (~> 1.0)
       em-websocket (~> 0.5)
@@ -74,7 +74,8 @@ GEM
     jekyll-swiss (1.0.0)
     jekyll-watch (2.2.1)
       listen (~> 3.0)
-    kramdown (2.1.0)
+    kramdown (2.2.1)
+      rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
     liquid (4.0.3)
@@ -106,14 +107,15 @@ GEM
     props-activerecord (0.2.0)
       activerecord
       props (>= 1.2.0)
-    public_suffix (4.0.3)
-    rb-fsevent (0.10.3)
+    public_suffix (4.0.5)
+    rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rouge (3.17.0)
+    rexml (3.2.4)
+    rouge (3.18.0)
     rubyzip (2.3.0)
     safe_yaml (1.0.5)
-    sassc (2.2.1)
+    sassc (2.3.0)
       ffi (~> 1.9)
     sqlite3 (1.4.2)
     terminal-table (1.8.0)
@@ -134,7 +136,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  jekyll (~> 4.0.0)
+  jekyll (~> 4.0.1)
   jekyll-feed (~> 0.12)
   jekyll-paginate (~> 1.1)
   jekyll-seo-tag (~> 2.6)
